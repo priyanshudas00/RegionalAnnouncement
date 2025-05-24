@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BhashaSeva - Government Announcement System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00c6ff;
+            --primary-dark: #0072ff;
+            --emergency: #ff4d4d;
+            --health: #00e676;
+            --welfare: #00b0ff;
+            --general: #78909c;
+            --bg-color: #0a192f;
+            --card-bg: #172a45;
+            --text-light: #e6f1ff;
+            --text-muted: #ccd6f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background elements */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            filter: blur(60px);
+            animation: float 15s infinite linear;
+        }
+        
+        .bg-element:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .bg-element:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: var(--emergency);
+            top: 60%;
+            left: 70%;
+            animation-delay: 3s;
+        }
+        
+        .bg-element:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            background: var(--health);
+            top: 30%;
+            left: 50%;
+            animation-delay: 6s;
+        }
+        
+        .bg-element:nth-child(4) {
+            width: 350px;
+            height: 350px;
+            background: var(--welfare);
+            top: 70%;
+            left: 30%;
+            animation-delay: 9s;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(50px, 50px) rotate(90deg);
+            }
+            50% {
+                transform: translate(0, 100px) rotate(180deg);
+            }
+            75% {
+                transform: translate(-50px, 50px) rotate(270deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+        
+        /* Pulsing animation for emergency elements */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 77, 77, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 77, 77, 0);
+            }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 32px;
+        }
+        
+        .test-translation-btn {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3);
+        }
+        
+        .test-translation-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 198, 255, 0.4);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        nav a.active {
+            color: var(--primary);
+        }
+        
+        nav a.active::after {
+            width: 100%;
+        }
+        
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 40px 0;
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(90deg, var(--text-light), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 198, 255, 0.4);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover::after {
+            transform: translateX(0);
+        }
+        
+        .btn-emergency {
+            background: linear-gradient(90deg, var(--emergency), #ff1a1a);
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .btn-emergency:hover {
+            box-shadow: 0 6px 20px rgba(255, 77, 77, 0.4);
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        .sidebar {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            height: fit-content;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+        }
+        
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+        
+        .sidebar h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-group {
+            margin-bottom: 15px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        
+        .filter-group select, 
+        .filter-group input {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(10, 25, 47, 0.5);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+        
+        .filter-group select:focus, 
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 198, 255, 0.2);
+        }
+        
+        .filter-group select option {
+            background-color: var(--card-bg);
+            color: var(--text-light);
+        }
+        
+        .checkbox-group {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-group input {
+            margin-right: 8px;
+            accent-color: var(--primary);
+        }
+        
+        .checkbox-group label {
+            color: var(--text-muted);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .announcement-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .announcement-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .announcement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        
+        .announcement-card:hover::before {
+            width: 8px;
+            background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+        }
+        
+        .announcement-card.priority-emergency::before {
+            background: var(--emergency);
+        }
+        
+        .announcement-card.priority-emergency:hover::before {
+            background: linear-gradient(to bottom, var(--emergency), #ff1a1a);
+        }
+        
+        .announcement-card.priority-health::before {
+            background: var(--health);
+        }
+        
+        .announcement-card.priority-health:hover::before {
+            background: linear-gradient(to bottom, var(--health), #00c853);
+        }
+        
+        .announcement-card.priority-welfare::before {
+            background: var(--welfare);
+        }
+        
+        .announcement-card.priority-welfare:hover::before {
+            background: linear-gradient(to bottom, var(--welfare), #0091ea);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+        
+        .card-priority {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .priority-emergency {
+            background: var(--emergency);
+            box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        .priority-health {
+            background: var(--health);
+            box-shadow: 0 0 10px rgba(0, 230, 118, 0.3);
+        }
+        
+        .priority-welfare {
+            background: var(--welfare);
+            box-shadow: 0 0 10px rgba(0, 176, 255, 0.3);
+        }
+        
+        .priority-general {
+            background: var(--general);
+            box-shadow: 0 0 10px rgba(120, 144, 156, 0.3);
+        }
+        
+        .card-districts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .district-tag {
+            background-color: rgba(0, 198, 255, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid rgba(0, 198, 255, 0.3);
+        }
+        
+        .card-content {
+            margin-bottom: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        .card-content strong {
+            color: var(--text-light);
+        }
+        
+        .card-translations {
+            margin-top: 15px;
+        }
+        
+        .translation-toggle {
+            color: var(--primary);
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .translation-toggle:hover {
+            color: var(--primary-dark);
+        }
+        
+        .translation-toggle::after {
+            content: '▼';
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .translation-toggle.active::after {
+            transform: rotate(180deg);
+        }
+        
+        .translation-content {
+            display: none;
+            padding: 15px;
+            background-color: rgba(10, 25, 47, 0.5);
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+        }
+        
+        .translation-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+        }
+        
+        .translation-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .translation-item h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .translation-text {
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        .audio-player {
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 8px;
+            background: rgba(10, 25, 47, 0.7);
+        }
+        
+        audio::-webkit-media-controls-panel {
+            background-color: rgba(10, 25, 47, 0.7);
+            border-radius: 8px;
+        }
+        
+        audio::-webkit-media-controls-play-button,
+        audio::-webkit-media-controls-mute-button {
+            background-color: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--general);
+        }
+        
+        .delivery-methods {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .delivery-icon {
+            font-size: 16px;
+            color: var(--primary);
+        }
+        
+        .no-announcements {
+            text-align: center;
+            padding: 40px;
+            color: var(--general);
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px dashed rgba(100, 255, 218, 0.3);
+        }
+        
+        .create-announcement {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+        }
+        
+        .create-announcement h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+        
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background-color: rgba(10, 25, 47, 0.5);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus, 
+        .form-group textarea:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 198, 255, 0.2);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        /* Government seal/badge */
+        .gov-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background-color: var(--card-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(100, 255, 218, 0.3);
+            z-index: 100;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .gov-badge::before {
+            content: 'Gov';
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--primary);
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .btn-emergency {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background elements -->
+    <div class="bg-elements">
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+    </div>
+    
+    <!-- Government seal -->
+    <div class="gov-badge"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span class="logo-icon">📢</span>
+                BhashaSeva
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Dashboard</a></li>
+                    <li><a href="#">Announcements</a></li>
+                    <li><a href="#">Emergency Alerts</a></li>
+                    <li><a href="#">Analytics</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <div class="hero">
+            <h1>Multilingual Public Service Announcements</h1>
+            <p>Deliver critical government information to citizens in their preferred languages through multiple channels</p>
+            <div>
+                <button class="btn" id="createAnnouncementBtn">Create Announcement</button>
+                <!-- <button class="btn btn-emergency" id="createEmergencyBtn">Emergency Alert</button> -->
+            </div>
+        </div>
+        
+        <div class="dashboard">
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3>🌐 Language Preferences</h3>
+                    <div class="filter-group">
+                        <label for="languages">Select Languages</label>
+                        <select id="languages" multiple>
+                            <option value="english" selected>English</option>
+                            <option value="hindi">Hindi</option>
+                            <option value="kannada">Kannada</option>
+                            <option value="tamil">Tamil</option>
+                            <option value="telugu">Telugu</option>
+                            <option value="marathi">Marathi</option>
+                            <option value="bengali">Bengali</option>
+                            <option value="gujarati">Gujarati</option>
+                            <option value="malayalam">Malayalam</option>
+                            <option value="punjabi">Punjabi</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>🔔 Notification Filters</h3>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="emergencyAlerts" checked>
+                        <label for="emergencyAlerts">Emergency Alerts</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="healthUpdates" checked>
+                        <label for="healthUpdates">Health Updates</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="welfareSchemes" checked>
+                        <label for="welfareSchemes">Welfare Schemes</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="generalAnnouncements" checked>
+                        <label for="generalAnnouncements">General Announcements</label>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>📢 Delivery Options</h3>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="enableAudio" checked>
+                        <label for="enableAudio">Enable Audio</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="enableSMS">
+                        <label for="enableSMS">Enable SMS</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="enablePush" checked>
+                        <label for="enablePush">Enable Push Notifications</label>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>⏱ Time Period</h3>
+                    <div class="filter-group">
+                        <select id="timeFilter">
+                            <option value="24h">Last 24 hours</option>
+                            <option value="7d">Last 7 days</option>
+                            <option value="30d">Last 30 days</option>
+                            <option value="all">All time</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>📍 Districts</h3>
+                    <div class="filter-group">
+                        <select id="districtFilter" multiple>
+                            <option value="all" selected>All Districts</option>
+                            <option value="Bengaluru">Bengaluru</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Chennai">Chennai</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Kolkata">Kolkata</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Ahmedabad">Ahmedabad</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Kochi">Kochi</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="btn" id="applyFiltersBtn" style="width: 100%;">Apply Filters</button>
+            </div>
+            
+            <div class="main-content">
+                <div class="create-announcement" id="createAnnouncementForm" style="display: none;">
+                    <h2>Create New Announcement</h2>
+                    <form id="announcementForm">
+                        <div class="form-group">
+                            <label for="announcementType">Announcement Type</label>
+                            <select id="announcementType">
+                                <option value="general">General</option>
+                                <option value="health">Health</option>
+                                <option value="welfare">Welfare</option>
+                                <option value="emergency">Emergency</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="priority">Priority</label>
+                            <select id="priority">
+                                <option value="general">General</option>
+                                <option value="high">High</option>
+                                <option value="urgent">Urgent</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sourceLanguage">Source Language</label>
+                            <select id="sourceLanguage">
+                                <option value="english">English</option>
+                                <option value="hindi">Hindi</option>
+                                <option value="kannada">Kannada</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="targetLanguages">Target Languages</label>
+                            <select id="targetLanguages" multiple>
+                                <option value="english">English</option>
+                                <option value="hindi">Hindi</option>
+                                <option value="kannada">Kannada</option>
+                                <option value="tamil">Tamil</option>
+                                <option value="telugu">Telugu</option>
+                                <option value="marathi">Marathi</option>
+                                <option value="bengali">Bengali</option>
+                                <option value="gujarati">Gujarati</option>
+                                <option value="malayalam">Malayalam</option>
+                                <option value="punjabi">Punjabi</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="districts">Districts</label>
+                            <select id="districts" multiple>
+                                <option value="Bengaluru">Bengaluru</option>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                                <option value="Kolkata">Kolkata</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Ahmedabad">Ahmedabad</option>
+                                <option value="Pune">Pune</option>
+                                <option value="Kochi">Kochi</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="announcementText">Announcement Text</label>
+                            <textarea id="announcementText" placeholder="Enter the announcement content"></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn" id="cancelAnnouncementBtn">Cancel</button>
+                            <button type="submit" class="btn">Submit Announcement</button>
+                            <button type="button" class="btn" id="testTranslateBtn">Test Translate</button>
+                        </div>
+                    </form>
+                    <div id="translationTestResult" style="margin-top: 15px; color: #00c6ff;"></div>
+                </div>
+                
+                <h2>Recent Announcements</h2>
+                
+                <div id="announcementsList">
+                    <!-- Announcements will be loaded here dynamically -->
+                    <div class="no-announcements">
+                        <p>No announcements found matching your filters</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sample data - in a real app, this would come from your API
+        const announcements = [
+            {
+                id: 1,
+                type: "Emergency Alert",
+                announcementType: "emergency",
+                priority: "urgent",
+                text: "Severe weather alert: Heavy rainfall and flooding expected in coastal areas. Please move to higher ground immediately.",
+                sourceLanguage: "english",
+                targetLanguages: ["kannada", "hindi", "tamil"],
+                districts: ["Bengaluru", "Chennai"],
+                timestamp: "2023-06-15T14:30:00",
+                translations: {
+                    kannada: "ತೀವ್ರ ಹವಾಮಾನ ಎಚ್ಚರಿಕೆ: ತೀವ್ರ ಮಳೆ ಮತ್ತು ಬಂಡೆಕಲ್ಲಿನ ಪ್ರವಾಹದ ಅಪಾಯವಿದೆ. ದಯವಿಟ್ಟು ತಕ್ಷಣವೇ ಹೆಚ್ಚಿನ ನೆಲಕ್ಕೆ ಸರಿಸಿ.",
+                    hindi: "गंभीर मौसम चेतावनी: तटीय क्षेत्रों में भारी बारिश और बाढ़ की आशंका है। कृपया तुरंत ऊंचे स्थान पर चले जाएं।",
+                    tamil: "கடுமையான வானிலை எச்சரிக்கை: கடலோர பகுதிகளில் கனமழை மற்றும் வெள்ளம் எதிர்பார்க்கப்படுகிறது. உடனடியாக உயரமான இடத்திற்கு செல்லவும்."
+                },
+                audioPaths: {
+                    kannada: "audio/kannada_alert.mp3",
+                    hindi: "audio/hindi_alert.mp3",
+                    tamil: "audio/tamil_alert.mp3"
+                }
+            },
+            {
+                id: 2,
+                type: "Health Update",
+                announcementType: "health",
+                priority: "high",
+                text: "New vaccination center opened at Community Health Center, Koramangala. All adults eligible for booster dose.",
+                sourceLanguage: "english",
+                targetLanguages: ["kannada", "hindi"],
+                districts: ["Bengaluru"],
+                timestamp: "2023-06-14T10:15:00",
+                translations: {
+                    kannada: "ಕೋರಮಂಗಲದ ಸಮುದಾಯ ಆರೋಗ್ಯ ಕೇಂದ್ರದಲ್ಲಿ ಹೊಸ ಲಸಿಕಾ ಕೇಂದ್ರ ತೆರೆಯಲಾಗಿದೆ. ಎಲ್ಲಾ ವಯಸ್ಕರಿಗೂ ಬೂಸ್ಟರ್ ಡೋಸ್ ಅರ್ಹತೆ ಇದೆ.",
+                    hindi: "कोरमंगला में सामुदायिक स्वास्थ्य केंद्र पर नया टीकाकरण केंद्र खोला गया। सभी वयस्क बूस्टर खुराक के लिए पात्र हैं।"
+                },
+                audioPaths: {
+                    kannada: "audio/kannada_health.mp3",
+                    hindi: "audio/hindi_health.mp3"
+                }
+            },
+            {
+                id: 3,
+                type: "Welfare Scheme",
+                announcementType: "welfare",
+                priority: "general",
+                text: "Applications open for Gruha Lakshmi scheme. Women heads of households can apply with Aadhaar and ration card.",
+                sourceLanguage: "english",
+                targetLanguages: ["kannada", "hindi", "telugu"],
+                districts: ["Bengaluru", "Hyderabad"],
+                timestamp: "2023-06-12T09:00:00",
+                translations: {
+                    kannada: "ಗೃಹ ಲಕ್ಷ್ಮಿ ಯೋಜನೆಗೆ ಅರ್ಜಿಗಳು ತೆರೆದಿವೆ. ಮನೆತಲೆಯ ಮಹಿಳೆಯರು ಆಧಾರ್ ಮತ್ತು ರೇಷನ್ ಕಾರ್ಡ್ನೊಂದಿಗೆ ಅರ್ಜಿ ಸಲ್ಲಿಸಬಹುದು.",
+                    hindi: "गृह लक्ष्मी योजना के लिए आवेदन खुले हैं। घर की महिला मुखिया आधार और राशन कार्ड के साथ आवेदन कर सकती हैं।",
+                    telugu: "గృహ లక్ష్మి పథకం కోసం దరఖాస్తులు తెరవబడ్డాయి. గృహిణులు ఆధార్ మరియు రేషన్ కార్డుతో దరఖాస్తు చేసుకోవచ్చు."
+                },
+                audioPaths: {
+                    kannada: "audio/kannada_welfare.mp3",
+                    hindi: "audio/hindi_welfare.mp3",
+                    telugu: "audio/telugu_welfare.mp3"
+                }
+            }
+        ];
+        
+        // DOM elements
+        const createAnnouncementBtn = document.getElementById('createAnnouncementBtn');
+        const createEmergencyBtn = document.getElementById('createEmergencyBtn');
+        const createAnnouncementForm = document.getElementById('createAnnouncementForm');
+        const cancelAnnouncementBtn = document.getElementById('cancelAnnouncementBtn');
+        const announcementForm = document.getElementById('announcementForm');
+        const announcementsList = document.getElementById('announcementsList');
+        const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+        
+        // Event listeners
+        createAnnouncementBtn.addEventListener('click', () => {
+            createAnnouncementForm.style.display = 'block';
+        });
+        
+        createEmergencyBtn.addEventListener('click', () => {
+            // Filter announcements to show only urgent priority with danger styling
+            renderUrgentAnnouncements();
+            createAnnouncementForm.style.display = 'block';
+            document.getElementById('announcementType').value = 'emergency';
+            document.getElementById('priority').value = 'urgent';
+        });
+
+        function renderUrgentAnnouncements() {
+            const announcementsList = document.getElementById('announcementsList');
+            announcementsList.innerHTML = '';
+
+            // Filter announcements with priority 'urgent'
+            const urgentAnnouncements = announcements.filter(a => a.priority.toLowerCase() === 'urgent');
+
+            if (urgentAnnouncements.length === 0) {
+                announcementsList.innerHTML = `
+                    <div class="no-announcements">
+                        <p>No urgent announcements available.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            urgentAnnouncements.forEach(announcement => {
+                const priorityClass = announcement.priority.toLowerCase();
+                const type = announcement.announcementType || 'General';
+
+                const districtsHtml = announcement.districts.map(district => `
+                    <span class="district-tag">${district}</span>
+                `).join('');
+
+                const announcementHtml = `
+                    <div class="announcement-card priority-${priorityClass}" style="border-color: var(--emergency); box-shadow: 0 0 15px var(--emergency);">
+                        <div class="card-header">
+                            <h3 class="card-title">${type.charAt(0).toUpperCase() + type.slice(1)}</h3>
+                            <span class="card-priority priority-${priorityClass}">
+                                🚨 URGENT
+                            </span>
+                        </div>
+                        <div class="card-districts">
+                            ${districtsHtml}
+                        </div>
+                        <div class="card-content">
+                            <p><strong>Original (${announcement.sourceLanguage}):</strong> ${announcement.text}</p>
+                        </div>
+                    </div>
+                `;
+
+                announcementsList.insertAdjacentHTML('beforeend', announcementHtml);
+            });
+        }
+        
+        cancelAnnouncementBtn.addEventListener('click', () => {
+            createAnnouncementForm.style.display = 'none';
+            announcementForm.reset();
+        });
+        
+        announcementForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const announcementType = document.getElementById('announcementType').value;
+            const priority = document.getElementById('priority').value;
+            const sourceLanguage = document.getElementById('sourceLanguage').value;
+            const targetLanguagesSelect = document.getElementById('targetLanguages');
+            const targetLanguages = Array.from(targetLanguagesSelect.selectedOptions).map(opt => opt.value);
+            const districtsSelect = document.getElementById('districts');
+            const districts = Array.from(districtsSelect.selectedOptions).map(opt => opt.value);
+            const announcementText = document.getElementById('announcementText').value.trim();
+
+            if (!announcementText) {
+                alert('Please enter announcement text.');
+                return;
+            }
+            if (targetLanguages.length === 0) {
+                alert('Please select at least one target language.');
+                return;
+            }
+            if (districts.length === 0) {
+                alert('Please select at least one district.');
+                return;
+            }
+
+            const announcementData = {
+                announcementType,
+                priority,
+                sourceLanguage,
+                targetLanguages,
+                districts,
+                announcementText: announcementText
+            };
+
+            try {
+                const response = await fetch('/api/announcements', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(announcementData)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    alert('Announcement submitted successfully!');
+                    createAnnouncementForm.style.display = 'none';
+                    announcementForm.reset();
+
+                    // Dynamically add the new announcement to the announcements list
+                    addAnnouncementToList(announcementData);
+                } else {
+                    alert('Failed to submit announcement: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Error submitting announcement: ' + error.message);
+            }
+        });
+
+        function addAnnouncementToList(announcement) {
+            const announcementsList = document.getElementById('announcementsList');
+
+            // Remove "No announcements" message if present
+            const noAnnouncements = announcementsList.querySelector('.no-announcements');
+            if (noAnnouncements) {
+                noAnnouncements.remove();
+            }
+
+            const priorityClass = announcement.priority.toLowerCase();
+            const type = announcement.announcementType || 'General';
+
+            const districtsHtml = announcement.districts.map(district => `
+                <span class="district-tag">${district}</span>
+            `).join('');
+
+            const announcementHtml = `
+                <div class="announcement-card priority-${priorityClass}">
+                    <div class="card-header">
+                        <h3 class="card-title">${type.charAt(0).toUpperCase() + type.slice(1)}</h3>
+                        <span class="card-priority priority-${priorityClass}">
+                            ${priorityClass === 'urgent' ? '🚨 URGENT' : 
+                              priorityClass === 'high' ? '⚠️ HIGH' : 'ℹ️ GENERAL'}
+                        </span>
+                    </div>
+                    <div class="card-districts">
+                        ${districtsHtml}
+                    </div>
+                    <div class="card-content">
+                        <p><strong>Original (${announcement.sourceLanguage}):</strong> ${announcement.announcementText}</p>
+                    </div>
+                </div>
+            `;
+
+            announcementsList.insertAdjacentHTML('afterbegin', announcementHtml);
+        }
+
+        // Handle Test Translate button click
+        const testTranslateBtn = document.getElementById('testTranslateBtn');
+        const translationTestResult = document.getElementById('translationTestResult');
+
+        testTranslateBtn.addEventListener('click', async () => {
+            const text = document.getElementById('announcementText').value.trim();
+            const srcLang = document.getElementById('sourceLanguage').value;
+            const tgtLangSelect = document.getElementById('targetLanguages');
+            const tgtLangs = Array.from(tgtLangSelect.selectedOptions).map(opt => opt.value);
+
+            if (!text) {
+                alert('Please enter announcement text to translate.');
+                return;
+            }
+            if (tgtLangs.length === 0) {
+                alert('Please select at least one target language.');
+                return;
+            }
+
+            translationTestResult.innerHTML = 'Translating...';
+
+            try {
+                // For demo, translate to the first selected target language
+                const tgtLang = tgtLangs[0];
+
+                const response = await fetch('/api/test-translation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text,
+                        srcLang,
+                        tgtLang
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const audioUrl = result.audioFile ? `/audio/${result.audioFile.split('/').pop()}` : null;
+                    translationTestResult.innerHTML = `
+                        <p><strong>Translated (${tgtLang}):</strong> ${result.translatedText}</p>
+                        ${audioUrl ? `<button id="playAudioBtn" style="background:none; border:none; cursor:pointer; color:#00c6ff;">🔊 Play Audio</button>` : ''}
+                    `;
+
+                    if (audioUrl) {
+                        const playAudioBtn = document.getElementById('playAudioBtn');
+                        playAudioBtn.addEventListener('click', () => {
+                            const audio = new Audio(audioUrl);
+                            audio.play();
+                        });
+                    }
+                } else {
+                    translationTestResult.innerHTML = `<p style="color:red;">Translation failed: ${result.message}</p>`;
+                }
+            } catch (error) {
+                translationTestResult.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+            }
+        });
+        
+        applyFiltersBtn.addEventListener('click', () => {
+            renderAnnouncements();
+        });
+        
+        // Initial render
+        renderAnnouncements();
+        
+        // Function to render announcements based on filters
+        function renderAnnouncements() {
+            // Get filter values
+            const selectedLanguages = Array.from(document.getElementById('languages').selectedOptions)
+                .map(option => option.value);
+            
+            const showEmergency = document.getElementById('emergencyAlerts').checked;
+            const showHealth = document.getElementById('healthUpdates').checked;
+            const showWelfare = document.getElementById('welfareSchemes').checked;
+            const showGeneral = document.getElementById('generalAnnouncements').checked;
+            
+            const timeFilter = document.getElementById('timeFilter').value;
+            const selectedDistricts = Array.from(document.getElementById('districtFilter').selectedOptions)
+                .map(option => option.value);
+            
+            const showAllDistricts = selectedDistricts.includes('all');
+            const enableAudio = document.getElementById('enableAudio').checked;
+            
+            // Filter announcements
+            const filteredAnnouncements = announcements.filter(announcement => {
+                // Check if announcement type should be shown
+                if (announcement.announcementType === 'emergency' && !showEmergency) return false;
+                if (announcement.announcementType === 'health' && !showHealth) return false;
+                if (announcement.announcementType === 'welfare' && !showWelfare) return false;
+                if (announcement.announcementType === 'general' && !showGeneral) return false;
+                
+                // Check if any of the target languages match selected languages
+                const hasMatchingLanguage = announcement.targetLanguages.some(lang => 
+                    selectedLanguages.includes(lang));
+                if (!hasMatchingLanguage) return false;
+                
+                // Check time filter
+                const announcementDate = new Date(announcement.timestamp);
+                const now = new Date();
+                
+                if (timeFilter === '24h' && (now - announcementDate) > 24 * 60 * 60 * 1000) return false;
+                if (timeFilter === '7d' && (now - announcementDate) > 7 * 24 * 60 * 60 * 1000) return false;
+                if (timeFilter === '30d' && (now - announcementDate) > 30 * 24 * 60 * 60 * 1000) return false;
+                
+                // Check district filter
+                if (!showAllDistricts) {
+                    const hasMatchingDistrict = announcement.districts.some(district => 
+                        selectedDistricts.includes(district));
+                    if (!hasMatchingDistrict) return false;
+                }
+                
+                return true;
+            });
+            
+            // Sort by timestamp (newest first)
+            filteredAnnouncements.sort((a, b) => 
+                new Date(b.timestamp) - new Date(a.timestamp));
+            
+            // Render announcements
+            if (filteredAnnouncements.length === 0) {
+                announcementsList.innerHTML = `
+                    <div class="no-announcements">
+                        <p>No announcements found matching your filters</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            announcementsList.innerHTML = filteredAnnouncements.map(announcement => `
+                <div class="announcement-card">
+                    <div class="card-header">
+                        <h3 class="card-title">${announcement.type}</h3>
+                        <span class="card-priority priority-${announcement.announcementType}">
+                            ${announcement.priority === 'urgent' ? '🚨 URGENT' : 
+                              announcement.priority === 'high' ? '⚠️ HIGH' : 'ℹ️ GENERAL'}
+                        </span>
+                    </div>
+                    
+                    <div class="card-districts">
+                        ${announcement.districts.map(district => `
+                            <span class="district-tag">${district}</span>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="card-content">
+                        <p><strong>Original (${announcement.sourceLanguage}):</strong> ${announcement.text}</p>
+                    </div>
+                    
+                    <div class="card-translations">
+                        <div class="translation-toggle" onclick="toggleTranslation(this)">
+                            ▼ Show Translations (${announcement.targetLanguages.length} languages)
+                        </div>
+                        <div class="translation-content">
+                            ${announcement.targetLanguages.map(lang => `
+                                <div class="translation-item">
+                                    <h4>${lang.charAt(0).toUpperCase() + lang.slice(1)}</h4>
+                                    <div class="translation-text">
+                                        ${announcement.translations[lang]}
+                                    </div>
+                                    ${enableAudio && announcement.audioPaths[lang] ? `
+                                        <audio controls class="audio-player">
+                                            <source src="${announcement.audioPaths[lang]}" type="audio/mpeg">
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <span>${formatDate(announcement.timestamp)}</span>
+                        <div class="delivery-methods">
+                            <span class="delivery-icon">🔊</span>
+                            <span class="delivery-icon">📱</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Helper function to toggle translation visibility
+        window.toggleTranslation = function(element) {
+            const content = element.nextElementSibling;
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+                element.textContent = element.textContent.replace('▲', '▼');
+            } else {
+                content.style.display = 'block';
+                element.textContent = element.textContent.replace('▼', '▲');
+            }
+        };
+        
+        // Helper function to format date
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+    </script>
+</body>
+</html>

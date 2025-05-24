@@ -1,0 +1,12 @@
+{
+  "natural_disaster": {
+    "channels": ["voice", "sms", "ivr", "mobile_app"],
+    "priority": "emergency",
+    "additional_actions": ["activate_sirens", "notify_authorities"]
+  },
+  "health_emergency": {
+    "channels": ["voice", "sms", "mobile_app"],
+    "priority": "health_alert",
+    "additional_actions": ["notify_hospitals"]
+  }
+}

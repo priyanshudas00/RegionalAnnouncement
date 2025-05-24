@@ -1,0 +1,41 @@
+[
+  {
+    "timestamp": "2025-05-24T14:45:00.554129",
+    "type": "Weather Update",
+    "text": "Heavy rainfall and strong winds expected today. Stay indoors, avoid unnecessary travel, and follow local advisories.\n\nStay safe!",
+    "source_lang": "english",
+    "target_langs": [
+      "kannada",
+      "hindi",
+      "tamil",
+      "telugu",
+      "marathi",
+      "bengali",
+      "gujarati",
+      "malayalam",
+      "punjabi"
+    ],
+    "urgency": "Normal",
+    "audio_paths": {}
+  },
+  {
+    "timestamp": "2025-05-24T15:24:03.042730",
+    "type": "Weather Update",
+    "text": "my name is Ram",
+    "source_lang": "english",
+    "target_langs": [
+      "kannada",
+      "hindi",
+      "tamil",
+      "telugu",
+      "marathi",
+      "bengali",
+      "gujarati",
+      "malayalam",
+      "punjabi"
+    ],
+    "urgency": "Normal",
+    "translations": {},
+    "audio_paths": {}
+  }
+]
